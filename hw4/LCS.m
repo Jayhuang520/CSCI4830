@@ -1,24 +1,48 @@
-function [mem,directionTable] = LCS(i,j,str1,str2)
+function [L,S] = LCS(str1,str2)
 %%%%This is a break down of finding the longest
 %%%%Common subsequenct
-     if i==1 || j==1
-            M = 0;
-            D = 0;
+m = length(str1);
+n = length(str2);
+mem = zeros(n,m);
+directionTable = zeros(n,m);
+%%%Preallocate the empty char array
+output = repmat(char(0),n,1);
+for i = 1:m
+    for j = 1:n
+        if i==1 || j==1
+            mem(i,j) = 0;
+            directionTable(i,j) = 0;
         elseif i>1 && j>1 && str1(i) == str2(j)
-            M = LCS(i-1,j-1,str1,str2) + 1;
-            D = 1; 
+            mem(i,j) = mem(i-1,j-1) + 1;
+            directionTable(i,j) = 1; 
      %% D = 1 means come from top left
-         elseif i>1 && j>1 && str1(i) ~= str2(j)
-            if mem(i-1,j) > mem(i,j-1)
+        elseif mem(i-1,j) > mem(i,j-1)
              mem(i,j) = mem(i-1,j);
-             directionTable(i,j) = 2;
+             directionTable(i,j) = 3;
             %%%D = 2 means come from <-
-            elseif mem(i-1,j) < mem(i,j-1)
+        elseif mem(i-1,j) < mem(i,j-1)
                 mem(i,j) = mem(i,j-1);
-                directionTable(i,j) = 3;
+                directionTable(i,j) = 2;
                 %%%%D = 3 means ^
                 %               |
-            end
         end
+    end
+end
+L = mem(m,n);
+%%%%%%%%%%%Oupput the subsequence
+for l = m:-1:2
+    if directionTable(l,l) == 1
+            output(l) = str1(l);
+    elseif directionTable(l-1,l)==1
+            output(l) = str1(l-1);
+    elseif directionTable(l,l-1)==1
+        output(l) = str1(l);
+    else 
+        continue;
+    end
+end
+
+S = output;
+
 end
 
