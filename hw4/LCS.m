@@ -11,7 +11,6 @@ for i = 1:m
     for j = 1:n
         if i==1 || j==1
             mem(i,j) = 0;
-            directionTable(i,j) = 0;
         elseif i>1 && j>1 && str1(i) == str2(j)
             mem(i,j) = mem(i-1,j-1) + 1;
             directionTable(i,j) = 1; 
