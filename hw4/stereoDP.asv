@@ -9,7 +9,6 @@ directionTable = zeros(Nl,Nr);
 %%For directionTable, define North as 1
 %%%%% West as 2, Northwest as 3
 DPTable = zeros(Nl,Nr);
-Disparity = zeros(Nl,Nr);
 for i = 1:Nl %Left epipolar line
     for j = 1:Nr %Right epipolar line
         if i == 1

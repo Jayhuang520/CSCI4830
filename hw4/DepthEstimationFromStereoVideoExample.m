@@ -62,11 +62,10 @@ occ = 0.01;
 [y,x] = size(frameLeftRect);
 [y1,x1] = size(frameRightRect);
 DisparityTable = zeros(y+1,x+1);
-e1 = zeros(y,x);
-e2 = zeros(y1,x1);
+
 for yy = 1:y 
    %Pull out the left image epipolar line 
-   disparityMap = stereoDP(frameLeftRect(yy,:),frameRightRect(yy,:),0.01);
+   disparotyMap = stereoDP(frameLeftRect(yy,:),frameRightRect(yy,:),0.01);
 end
 figure;
 imshow(disparityMap, [0, 64]);
