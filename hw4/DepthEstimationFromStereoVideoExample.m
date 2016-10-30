@@ -56,16 +56,15 @@ frameRightGray = rgb2gray(frameRightRect);
 %%%%%part a disparity matching along each pipolar lines
 %%%%First get the size of the rectified left and right image
 %%%%Since the image is rectified, search along the horizonal line
-maxDisp = 64;
 occ = 0.01;
 
 [y,x] = size(frameLeftRect);
 [y1,x1] = size(frameRightRect);
-DisparityTable = zeros(y+1,x+1);
+DTable = zeros(y+1,x+1);
+disparityMap = zeros(y+1,x+1);
 
-for yy = 1:y 
-   %Pull out the left image epipolar line 
-   disparotyMap = stereoDP(frameLeftRect(yy,:),frameRightRect(yy,:),0.01);
+for yy = 1:y
+   disparityMap(yy,:) = stereoDP(frameLeftRect(yy,:),frameRightRect(yy,:),occ);
 end
 figure;
 imshow(disparityMap, [0, 64]);

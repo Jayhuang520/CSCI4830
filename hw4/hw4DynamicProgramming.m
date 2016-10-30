@@ -14,7 +14,5 @@ x = ['The size of the longest subsequence is ', num2str(L)];
 disp(x);
 fprintf('The actual subsequence is %s\n',S);
          
- %%%%% Task 2:Calculate stereo disparity using the DP
- %%%Part A
-%  occ = 0.1;
+
  
