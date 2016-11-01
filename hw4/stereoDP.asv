@@ -43,20 +43,15 @@ end
 row = x;
 col = x;
     for k = x:-1:2
-        while (row && col) > 1
+        while 
             if directionTable(row,col) == 1
                 col = col - 1;
-                %%%Corresponds to skipping a pixel in Il(a unit decrease in disparity)
-                disparity(1,k) = abs(i - j) - 1;
+
             elseif directionTable(row,col) == 2
                 row = row - 1;
-                %%%%Corresponds to skipping a pixel in Ir(a unit decrease in disparity)
-                disparity(1,k) = abs(i - j) + 1;
             else
-                %%%%%%%Matches pixels, leave the disparity unchanged
                 row = row - 1;
                 col = col - 1;
-                disparity(1,k) = abs(i - j);
             end
         end
     end

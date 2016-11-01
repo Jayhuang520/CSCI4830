@@ -9,9 +9,10 @@ function [d_color] = display_dmap(d)
 disparity = d./255;
 max_d = max(disparity);
 min_d = min(disparity);
-temp = zeros(y,x);
 
-
+for
+    
+end
 % 2. Colorize occluded pixels to be red
 % dColor = color image where each RGB layer is equal to the
 % scaled disparity matrix (values between 0 and 1)

@@ -63,11 +63,10 @@ occ = 0.01;
 disparity = zeros(y,x);
 
 for yy = 1:y
-   disparity(yy,:) = stereoDP(frameLeftRect(yy,:),frameRightRect(yy,:),occ);
+   disparity() = stereoDP(frameLeftRect(yy,:),frameRightRect(yy,:),occ);
 end
 figure;
-%imshow(disparityMap, [0, 64]);
-imshow(disparity,[0,64]);
+imshow(disparityMap, [0, 64]);
 title('Disparity Map');
 colormap jet
 colorbar
