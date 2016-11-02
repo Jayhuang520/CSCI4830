@@ -1,4 +1,10 @@
 function [d_color] = display_dmap(d)
+%%%%%%%Assignment 4
+%%%CSCI 4830 Computer Vision
+%Zhi Jie huang
+%Instructor:Fleming
+%%%%%Due date: Nov 2nd, 11:55 pm
+
 % 1. Map disparity into the range [0,1]
 % max_d = the maximum calculated value of disparity;
 % min_d = the minimum calculated value of disparity;

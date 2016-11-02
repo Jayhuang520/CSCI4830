@@ -5,8 +5,8 @@
 %%%%%Due date: Nov 2nd, 11:55 pm
 %%%Main script:
 %Task 1
-str1 = 'HORSEBACK';
-str2 = 'SNOWFLAKE';
+str1 = 'ABCDEF';
+str2 = 'ABCDEF';
 %implment the recursive function
 [L,S] = LCS(str1,str2);
 

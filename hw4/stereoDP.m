@@ -1,4 +1,12 @@
 function [disparity] = stereoDP(e1,e2,occ)
+%%%%%%%Assignment 4
+%%%CSCI 4830 Computer Vision
+%Zhi Jie huang
+%Instructor:Fleming
+%%%%%Due date: Nov 2nd, 11:55 pm
+
+
+
 
 %%%%% Calculate the disparity, it is just the index difference between i
 %%%%% and j.!!!!!!!!!!!!!!!!!
@@ -50,18 +58,6 @@ for i = 2:x %Left epipolar line
             else
                 costTable(i,j) = D2;
                 directionTable(i,j) = 2;
-%             if D1 < D2 && D1 < D3
-%                 costTable(i,j) = D1;
-%                 directionTable(i,j) = 1;
-%             elseif D2 < D1 && D2 < D3
-%                 costTable(i,j) = D2;
-%                 directionTable(i,j) = 2;
-%             else
-%                 costTable(i,j) = D3;
-%                 directionTable(i,j) = 3;
-%             end
-%             A = [D1,D2,D3];
-%             [~,direction] = min(A);
 %             directionTable(i,j) = direction;
             %%%%%Since matlab start with index 1,for my funtion
             %%%Go to index 3
