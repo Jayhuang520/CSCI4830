@@ -7,9 +7,9 @@ function [d_color] = display_dmap(d)
 % and min_d
 [y,x] = size(d);
 d_color = zeros(y,x,3);
-disparity = d./255;
-max_d = max(max(disparity));
-min_d = min(min(disparity));
+max_d = max(max(d));
+min_d = min(min(d));
+d = d./max_d;
 temp = zeros(y,x);
 temp(1:y,1:x) = (d(1:y,1:x) - min_d)./(max_d-min_d);
 

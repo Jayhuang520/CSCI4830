@@ -19,7 +19,6 @@ costTable(1,1) = (e1(1) - e2(1))^2;
 directionTable(1,1) = 3;
 costTable(1,1:x) = x*occ;
              
-
             if costTable(i,j) > costTable(i,j-1)
                 directionTable(i,j) = directionTable(i,j-1);
             else
