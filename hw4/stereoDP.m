@@ -17,60 +17,55 @@ costTable = zeros(x,x);
 directionTable(1,1) = 1;
 costTable(1,1) = (e1(1) - e2(1))^2;
 directionTable(1,1) = 3;
-costTable(1,1:x) = x*occ;
-             
+for ii = 2:x
+    costTable(1,ii) = ii*occ;
+    if costTable(1,ii) > costTable(1,ii-1)
+       directionTable(1,ii) = directionTable(1,ii);
+    else
+        directionTable(1,ii) = directionTable(1,ii-1);
+    end
+    costTable(ii,1) = ii*occ;
+    if costTable(ii,1) > costTable(ii-1,1)
+       directionTable(ii,1) = directionTable(ii-1,1);
+    else
+        directionTable(ii,1) = directionTable(ii-1,1);
+    end
+end
 
-            if costTable(i,j) > costTable(i,j-1)
-                directionTable(i,j) = directionTable(i,j-1);
-            else
-                directionTable(i,j) = directionTable(i,j);
-            end
 
-
-
-
-for i = 1:x %Left epipolar line
-    for j = 1:x %Right epipolar line
-        if i == 1 && j == 1
-            costTable(1,1) = (e1(1) - e2(1))^2;
-            directionTable(i,j) = 3;
-        elseif i == 1 && j~= 1
-            costTable(i,j) = j*occ;
-            if costTable(i,j) > costTable(i,j-1)
-                directionTable(i,j) = directionTable(i,j-1);
-            else
-                directionTable(i,j) = directionTable(i,j);
-            end
-        elseif j == 1 && i ~= 1
-            costTable(i,j) = i*occ;
-           if costTable(i,j) > costTable(i-1,j)
-                directionTable(i,j) = directionTable(i-1,j);
-            else
-                directionTable(i,j) = directionTable(i,j);
-           end
-        else
+for i = 2:x %Left epipolar line
+    for j = 2:x %Right epipolar line
             dij = (e1(i) - e2(j))^2;
             D1 = costTable(i,j-1) + occ;
             D2 = costTable(i-1,j) + occ;
             D3 = costTable(i-1,j-1) + dij;
             
-            if D1 < D2 && D1 < D3
-                costTable(i,j) = D1;
-                directionTable(i,j) = 1;
-            elseif D2 < D1 && D2 < D3
-                costTable(i,j) = D2;
-                directionTable(i,j) = 2;
-            else
+            if D3 < D2 && D3 < D1
                 costTable(i,j) = D3;
                 directionTable(i,j) = 3;
-            end
+            elseif D1 < D2
+                  costTable(i,j) = D1;
+                directionTable(i,j) = 1;
+            else
+                costTable(i,j) = D2;
+                directionTable(i,j) = 2;
+%             if D1 < D2 && D1 < D3
+%                 costTable(i,j) = D1;
+%                 directionTable(i,j) = 1;
+%             elseif D2 < D1 && D2 < D3
+%                 costTable(i,j) = D2;
+%                 directionTable(i,j) = 2;
+%             else
+%                 costTable(i,j) = D3;
+%                 directionTable(i,j) = 3;
+%             end
 %             A = [D1,D2,D3];
 %             [~,direction] = min(A);
 %             directionTable(i,j) = direction;
             %%%%%Since matlab start with index 1,for my funtion
             %%%Go to index 3
             %1 for Northwest, 2 for West and 3 for North
-        end
+            end
     end
 end
 
