@@ -9,6 +9,7 @@ function [disparity] = stereoDP(e1,e2,occ)
 %%%%%%Part A
 [~,x] = size(e1);
 %%%e1 and e2 are epipolar scanline of the two image
+
 disparity = zeros(1,x);
 directionTable = zeros(x,x);
 %%For directionTable, define North as 1

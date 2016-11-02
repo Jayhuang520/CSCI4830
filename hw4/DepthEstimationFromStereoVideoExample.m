@@ -58,153 +58,155 @@ frameRightGray = rgb2gray(frameRightRect);
 %%%%Since the image is rectified, search along the horizonal line
 occ = 0.01;
 
-[y,x] = size(frameLeftRect);
-[y1,x1] = size(frameRightRect);
+[y,x] = size(frameLeftGray);
+[y1,x1] = size(frameRightGray);
 Disparity = zeros(y,x);
-frameLeftRect = double(frameLeftRect);
-frameRightRect = double(frameRightRect);
-frameLeftRect = frameLeftRect/255;
-frameRightRect = frameRightRect/255;
+frameLeftGray = double(frameLeftGray);
+frameRightGray = double(frameRightGray);
+frameLeftGray = frameLeftGray/255;
+frameRightGray = frameRightGray/255;
 
 for yy = 1:y
-   Disparity(yy,:) = stereoDP(frameLeftRect(yy,:),frameRightRect(yy,:),occ);
+   Disparity(yy,:) = stereoDP(frameLeftGray(yy,:,:),frameRightGray(yy,:),occ);
+   yy
 end
+dcolor = display_dmap(Disparity);
 
 figure;
 %imshow(disparityMap, [0, 64]);
-imshow(Disparity);
+imshow(dcolor);
 title('Disparity Map');
 colormap jet
 colorbar
-
-%% Reconstruct the 3-D Scene
-% Reconstruct the 3-D world coordinates of points corresponding to each
-% pixel from the disparity map.
-points3D = reconstructScene(disparityMap, stereoParams);
-
-% Convert to meters and create a pointCloud object
-points3D = points3D ./ 1000;
-ptCloud = pointCloud(points3D, 'Color', frameLeftRect);
-
-% Create a streaming point cloud viewer
-player3D = pcplayer([-3, 3], [-3, 3], [0, 8], 'VerticalAxis', 'y', ...
-    'VerticalAxisDir', 'down');
-
-% Visualize the point cloud
-view(player3D, ptCloud);
-
-
-%% Detect People in the Left Image
-% Use the |vision.PeopleDetector| system object to detect people.
-
-% Create the people detector object. Limit the minimum object size for
-% speed.
-peopleDetector = vision.PeopleDetector('MinSize', [166 83]);
-
-% Detect people.
-bboxes = peopleDetector.step(frameLeftGray);
-
-%% Determine The Distance of Each Person to the Camera
-% Find the 3-D world coordinates of the centroid of each detected person
-% and compute the distance from the centroid to the camera in meters.
-
-% Find the centroids of detected people.
-centroids = [round(bboxes(:, 1) + bboxes(:, 3) / 2), ...
-    round(bboxes(:, 2) + bboxes(:, 4) / 2)];
-
-% Find the 3-D world coordinates of the centroids.
-centroidsIdx = sub2ind(size(disparityMap), centroids(:, 2), centroids(:, 1));
-X = points3D(:, :, 1);
-Y = points3D(:, :, 2);
-Z = points3D(:, :, 3);
-centroids3D = [X(centroidsIdx)'; Y(centroidsIdx)'; Z(centroidsIdx)'];
-
-% Find the distances from the camera in meters.
-dists = sqrt(sum(centroids3D .^ 2));
-    
-% Display the detected people and their distances.
-labels = cell(1, numel(dists));
-for i = 1:numel(dists)
-    labels{i} = sprintf('%0.2f meters', dists(i));
-end
-figure;
-imshow(insertObjectAnnotation(frameLeftRect, 'rectangle', bboxes, labels));
-title('Detected People');
-
-%% Process the Rest of the Video
-% Apply the steps described above to detect people and measure their
-% distances to the camera in every frame of the video.
-
-while ~isDone(readerLeft) && ~isDone(readerRight)
-    % Read the frames.
-    frameLeft = readerLeft.step();
-    frameRight = readerRight.step();
-    
-    % Rectify the frames.
-    [frameLeftRect, frameRightRect] = ...
-        rectifyStereoImages(frameLeft, frameRight, stereoParams);
-    
-    % Convert to grayscale.
-    frameLeftGray  = rgb2gray(frameLeftRect);
-    frameRightGray = rgb2gray(frameRightRect);
-    
-    % Compute disparity. 
-    disparityMap = disparity(frameLeftGray, frameRightGray);
-    
-    % Reconstruct 3-D scene.
-    points3D = reconstructScene(disparityMap, stereoParams);
-    points3D = points3D ./ 1000;
-    ptCloud = pointCloud(points3D, 'Color', frameLeftRect);
-    view(player3D, ptCloud);
-    
-    % Detect people.
-    bboxes = peopleDetector.step(frameLeftGray);
-    
-    if ~isempty(bboxes)
-        % Find the centroids of detected people.
-        centroids = [round(bboxes(:, 1) + bboxes(:, 3) / 2), ...
-            round(bboxes(:, 2) + bboxes(:, 4) / 2)];
-        
-        % Find the 3-D world coordinates of the centroids.
-        centroidsIdx = sub2ind(size(disparityMap), centroids(:, 2), centroids(:, 1));
-        X = points3D(:, :, 1);
-        Y = points3D(:, :, 2);
-        Z = points3D(:, :, 3);
-        centroids3D = [X(centroidsIdx), Y(centroidsIdx), Z(centroidsIdx)];
-        
-        % Find the distances from the camera in meters.
-        dists = sqrt(sum(centroids3D .^ 2, 2));
-        
-        % Display the detect people and their distances.
-        labels = cell(1, numel(dists));
-        for i = 1:numel(dists)
-            labels{i} = sprintf('%0.2f meters', dists(i));
-        end
-        dispFrame = insertObjectAnnotation(frameLeftRect, 'rectangle', bboxes,...
-            labels);
-    else
-        dispFrame = frameLeftRect;
-    end
-    
-    % Display the frame.
-    step(player, dispFrame);
-end
-
-% Clean up.
-reset(readerLeft);
-reset(readerRight);
-release(player);
-
-%% Summary
-% This example showed how to localize pedestrians in 3-D using a calibrated
-% stereo camera.
-
-%% References
-% [1] G. Bradski and A. Kaehler, "Learning OpenCV : Computer Vision with
-% the OpenCV Library," O'Reilly, Sebastopol, CA, 2008.
-%
-% [2] Dalal, N. and Triggs, B., Histograms of Oriented Gradients for
-% Human Detection. CVPR 2005.
-
-displayEndOfDemoMessage(mfilename)
-
+% 
+% %% Reconstruct the 3-D Scene
+% % Reconstruct the 3-D world coordinates of points corresponding to each
+% % pixel from the disparity map.
+% points3D = reconstructScene(disparityMap, stereoParams);
+% 
+% % Convert to meters and create a pointCloud object
+% points3D = points3D ./ 1000;
+% ptCloud = pointCloud(points3D, 'Color', frameLeftRect);
+% 
+% % Create a streaming point cloud viewer
+% player3D = pcplayer([-3, 3], [-3, 3], [0, 8], 'VerticalAxis', 'y', ...
+%     'VerticalAxisDir', 'down');
+% 
+% % Visualize the point cloud
+% view(player3D, ptCloud);
+% 
+% 
+% %% Detect People in the Left Image
+% % Use the |vision.PeopleDetector| system object to detect people.
+% 
+% % Create the people detector object. Limit the minimum object size for
+% % speed.
+% peopleDetector = vision.PeopleDetector('MinSize', [166 83]);
+% 
+% % Detect people.
+% bboxes = peopleDetector.step(frameLeftGray);
+% 
+% %% Determine The Distance of Each Person to the Camera
+% % Find the 3-D world coordinates of the centroid of each detected person
+% % and compute the distance from the centroid to the camera in meters.
+% 
+% % Find the centroids of detected people.
+% centroids = [round(bboxes(:, 1) + bboxes(:, 3) / 2), ...
+%     round(bboxes(:, 2) + bboxes(:, 4) / 2)];
+% 
+% % Find the 3-D world coordinates of the centroids.
+% centroidsIdx = sub2ind(size(disparityMap), centroids(:, 2), centroids(:, 1));
+% X = points3D(:, :, 1);
+% Y = points3D(:, :, 2);
+% Z = points3D(:, :, 3);
+% centroids3D = [X(centroidsIdx)'; Y(centroidsIdx)'; Z(centroidsIdx)'];
+% 
+% % Find the distances from the camera in meters.
+% dists = sqrt(sum(centroids3D .^ 2));
+%     
+% % Display the detected people and their distances.
+% labels = cell(1, numel(dists));
+% for i = 1:numel(dists)
+%     labels{i} = sprintf('%0.2f meters', dists(i));
+% end
+% figure;
+% imshow(insertObjectAnnotation(frameLeftRect, 'rectangle', bboxes, labels));
+% title('Detected People');
+% 
+% %% Process the Rest of the Video
+% % Apply the steps described above to detect people and measure their
+% % distances to the camera in every frame of the video.
+% 
+% while ~isDone(readerLeft) && ~isDone(readerRight)
+%     % Read the frames.
+%     frameLeft = readerLeft.step();
+%     frameRight = readerRight.step();
+%     
+%     % Rectify the frames.
+%     [frameLeftRect, frameRightRect] = ...
+%         rectifyStereoImages(frameLeft, frameRight, stereoParams);
+%     
+%     % Convert to grayscale.
+%     frameLeftGray  = rgb2gray(frameLeftRect);
+%     frameRightGray = rgb2gray(frameRightRect);
+%     
+%     % Compute disparity. 
+%     disparityMap = disparity(frameLeftGray, frameRightGray);
+%     
+%     % Reconstruct 3-D scene.
+%     points3D = reconstructScene(disparityMap, stereoParams);
+%     points3D = points3D ./ 1000;
+%     ptCloud = pointCloud(points3D, 'Color', frameLeftRect);
+%     view(player3D, ptCloud);
+%     
+%     % Detect people.
+%     bboxes = peopleDetector.step(frameLeftGray);
+%     
+%     if ~isempty(bboxes)
+%         % Find the centroids of detected people.
+%         centroids = [round(bboxes(:, 1) + bboxes(:, 3) / 2), ...
+%             round(bboxes(:, 2) + bboxes(:, 4) / 2)];
+%         
+%         % Find the 3-D world coordinates of the centroids.
+%         centroidsIdx = sub2ind(size(disparityMap), centroids(:, 2), centroids(:, 1));
+%         X = points3D(:, :, 1);
+%         Y = points3D(:, :, 2);
+%         Z = points3D(:, :, 3);
+%         centroids3D = [X(centroidsIdx), Y(centroidsIdx), Z(centroidsIdx)];
+%         
+%         % Find the distances from the camera in meters.
+%         dists = sqrt(sum(centroids3D .^ 2, 2));
+%         
+%         % Display the detect people and their distances.
+%         labels = cell(1, numel(dists));
+%         for i = 1:numel(dists)
+%             labels{i} = sprintf('%0.2f meters', dists(i));
+%         end
+%         dispFrame = insertObjectAnnotation(frameLeftRect, 'rectangle', bboxes,...
+%             labels);
+%     else
+%         dispFrame = frameLeftRect;
+%     end
+%     
+%     % Display the frame.
+%     step(player, dispFrame);
+% end
+% 
+% % Clean up.
+% reset(readerLeft);
+% reset(readerRight);
+% release(player);
+% 
+% %% Summary
+% % This example showed how to localize pedestrians in 3-D using a calibrated
+% % stereo camera.
+% 
+% %% References
+% % [1] G. Bradski and A. Kaehler, "Learning OpenCV : Computer Vision with
+% % the OpenCV Library," O'Reilly, Sebastopol, CA, 2008.
+% %
+% % [2] Dalal, N. and Triggs, B., Histograms of Oriented Gradients for
+% % Human Detection. CVPR 2005.
+% 
+% displayEndOfDemoMessage(mfilename)
+% 

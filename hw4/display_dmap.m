@@ -6,7 +6,7 @@ function [d_color] = display_dmap(d)
 % value min_d and dividing by the difference beween max_d
 % and min_d
 [y,x] = size(d);
-d_color = zeros(y,x,3);
+d_color = zeros(y,x);
 max_d = max(max(d));
 min_d = min(min(d));
 d = d./max_d;
@@ -28,7 +28,7 @@ end
 for yy = 1:y
     for xx = 1:x
         if isnan(temp(yy,xx))
-            d_color = [1,0,0];
+            d_color(yy,xx,:) = [1,0,0];
         end
     end
 end

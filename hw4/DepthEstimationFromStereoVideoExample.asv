@@ -58,18 +58,22 @@ frameRightGray = rgb2gray(frameRightRect);
 %%%%Since the image is rectified, search along the horizonal line
 occ = 0.01;
 
-[y,x] = size(frameLeftRect);
-[y1,x1] = size(frameRightRect);
-disparity = zeros(y,x);
+[y,x,z] = size(frameLeftRect);
+[y1,x1,z1] = size(frameRightRect);
+Disparity = zeros(y,x);
+frameLeftRect = double(frameLeftRect);
+frameRightRect = double(frameRightRect);
+frameLeftRect = frameLeftRect/255;
+frameRightRect = frameRightRect/255;
 
 for yy = 1:y
-   disparity(yy,:) = stereoDP(frameLeftRect(yy,:),frameRightRect(yy,:),occ);
-   dcolor(yy,:,:) = display_
+   Disparity(yy,:) = stereoDP(frameLeftRect(yy,:),frameRightRect(yy,:),occ);
+   yy
 end
 
 figure;
 %imshow(disparityMap, [0, 64]);
-imshow(disparity);
+imshow(Disparity);
 title('Disparity Map');
 colormap jet
 colorbar
