@@ -87,7 +87,6 @@ frameRightGray = frameRightGray/255;
 
 for yy = 1:y
    Disparity(yy,:) = stereoDP(frameLeftGray(yy,:,:),frameRightGray(yy,:),occ);
-   yy
 end
 
 dcolor = display_dmap(Disparity);
