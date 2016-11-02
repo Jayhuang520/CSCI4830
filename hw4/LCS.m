@@ -7,6 +7,7 @@ mem = zeros(n,m);
 directionTable = zeros(n,m);
 %%%Preallocate the empty char array
 output = repmat(char(0),n,1);
+
 for i = 1:m
     for j = 1:n
         if i==1 || j==1
@@ -29,6 +30,7 @@ for i = 1:m
 end
 L = mem(m,n);
 %%%%%%%%%%%Oupput the subsequence
+
 for l = m:-1:2
     if directionTable(l,l) == 1
             output(l) = str1(l);
@@ -36,11 +38,22 @@ for l = m:-1:2
             output(l) = str1(l-1);
     elseif directionTable(l,l-1)==1
         output(l) = str1(l);
-    else 
-        continue;
     end
 end
 
+% l = m;
+% k = n;
+% while l > 1 && k > 1
+%     if directionTable(l,k) == 1
+%             output(l) = str1(l);
+%             l = l - 1;
+%             k = k - 1;
+%     elseif directionTable(l,k) == 2
+%             l = l - 1;
+%     elseif directionTable(l,k)== 3
+%             k = k - 1;
+%     end
+% end
 S = output;
 
 end

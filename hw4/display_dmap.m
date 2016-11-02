@@ -6,11 +6,12 @@ function [d_color] = display_dmap(d)
 % value min_d and dividing by the difference beween max_d
 % and min_d
 [y,x] = size(d);
+d_color = zeros(y,x,3);
 disparity = d./255;
-max_d = max(disparity);
-min_d = min(disparity);
+max_d = max(max(disparity));
+min_d = min(min(disparity));
 temp = zeros(y,x);
-
+temp(1:y,1:x) = (d(1:y,1:x) - min_d)./(max_d-min_d);
 
 % 2. Colorize occluded pixels to be red
 % dColor = color image where each RGB layer is equal to the
@@ -21,6 +22,18 @@ temp = zeros(y,x);
 % dColor(at position in R layer) = 1; 
 % dColor(at position in G layer) = 0;
 % dColor(at position in B layer) = 0;
+for zz = 1:3
+    d_color(1:y,1:x,zz) = temp(1:y,1:x);
+end
+for yy = 1:y
+    for xx = 1:x
+        if isnan(temp(yy,xx))
+            d_color = [1,0,0];
+        end
+    end
+end
+
+
 % 3. Display dColor image using imshow
 
 end
