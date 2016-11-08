@@ -1,12 +1,9 @@
-function [disparity] = stereoDP(e1,e2,occ)
+function [disparity] = stereoDP(e1,e2,occ,Winput)
 %%%%%%%Assignment 4
 %%%CSCI 4830 Computer Vision
 %Zhi Jie huang
 %Instructor:Fleming
 %%%%%Due date: Nov 2nd, 11:55 pm
-
-
-
 
 %%%%% Calculate the disparity, it is just the index difference between i
 %%%%% and j.!!!!!!!!!!!!!!!!!
@@ -17,7 +14,6 @@ function [disparity] = stereoDP(e1,e2,occ)
 %%%%%%Part A
 [~,x] = size(e1);
 %%%e1 and e2 are epipolar scanline of the two image
-
 disparity = zeros(1,x);
 directionTable = zeros(x,x);
 %%For directionTable, define North as 1
@@ -26,6 +22,9 @@ costTable = zeros(x,x);
 directionTable(1,1) = 1;
 costTable(1,1) = (e1(1) - e2(1))^2;
 directionTable(1,1) = 3;
+
+diff = zeros(1,65);
+
 for ii = 2:x
     costTable(1,ii) = ii*occ;
     if costTable(1,ii) > costTable(1,ii-1)
@@ -44,11 +43,25 @@ end
 
 for i = 2:x %Left epipolar line
     for j = 2:x %Right epipolar line
-            dij = (e1(i) - e2(j))^2;
+%%%%%------------Default cost functinsquared difference in pixels---------
+            %dij = (e1(i) - e2(j))^2;
+            
+            
+%%%%%%%%%%%%%%%------Extra Credit----------------
+        for yy = Winput+1:j-Winput
+            Limg = e1(yy-Winput:yy+Winput);
+            for ii = 1:65
+                Rimg = e2(yy-Winput);
+                diff(ii) = sum(sum(Limg - Rimg).^2);
+                [~,I] = min(diff);
+                dij = I - 1;
+            end
+        end
+%%%%%%%%---------------End of Extra Credit--------
+            
             D1 = costTable(i,j-1) + occ;
             D2 = costTable(i-1,j) + occ;
             D3 = costTable(i-1,j-1) + dij;
-            
             if D3 < D2 && D3 < D1
                 costTable(i,j) = D3;
                 directionTable(i,j) = 3;

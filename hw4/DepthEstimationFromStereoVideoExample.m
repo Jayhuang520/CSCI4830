@@ -87,14 +87,21 @@ occ = 0.01;
 [y,x] = size(frameLeftGray);
 [y1,x1] = size(frameRightGray);
 Disparity = zeros(y,x);
+% DMap2 = zeros(y,x);
 frameLeftGray = double(frameLeftGray);
 frameRightGray = double(frameRightGray);
 frameLeftGray = frameLeftGray/255;
 frameRightGray = frameRightGray/255;
 
-for yy = 1:y
-   Disparity(yy,:) = stereoDP(frameLeftGray(yy,:,:),frameRightGray(yy,:),occ);
-end
+% for yy = 1:y
+%      DMap1(yy,:) = stereoDP(frameLeftGray(yy,:,:),frameRightGray(yy,:),occ,1);
+% %      DMap2(yy,:) = stereoDP(frameLeftGray(yy,:,:),frameRightGray(yy,:),occ,2);
+%      yy
+% end           
+    for yy = 1:y
+       Disparity(yy,:) = stereoDP(frameLeftGray(yy,:,:),frameRightGray(yy,:),occ,1);
+       yy
+    end
 
 dcolor = display_dmap(Disparity);
 

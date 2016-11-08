@@ -15,9 +15,6 @@ function [d_color] = display_dmap(d)
 d_color = zeros(y,x,3);
 max_d = nanmax(nanmax(d));
 min_d = nanmin(nanmin(d));
-%d = d./max_d;
-% temp = zeros(y,x);
-% temp(1:y,1:x) = (d(1:y,1:x) - min_d)./(max_d-min_d);
 
 % 2. Colorize occluded pixels to be red
 % dColor = color image where each RGB layer is equal to the
