@@ -46,7 +46,13 @@ for i = 1:size(BBox,1)
     imwrite(CropImage,filename);
     [Eye,Nose,Mouth] = FeatureDetection(CropImage,i);
 end
-% 
+
+%     w = int2str(i);
+%     filename = strcat('img',w,'.jpg');
+%     CropImage = imcrop(Jay,[BBox(i,1) BBox(i,2) BBox(i,3) BBox(i,4)]);
+%     imwrite(CropImage,filename);
+%     [Eye,Nose,Mouth] = FeatureDetection(CropImage,i);
+
 % I = imread('img1.jpg');
 % [Eye,Nose,Mouth] = FeatureDetection(I);
 % nose = Nose(I);

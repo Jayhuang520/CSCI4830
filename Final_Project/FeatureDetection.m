@@ -29,22 +29,27 @@ function [ Eye,Nose,Mouth] = FeatureDetection( input_img,i)
     CropImageEye = imcrop(input_img,[BBoxE(1) BBoxE(2) BBoxE(3) BBoxE(4)]);
 %     cd Eye
 %     cd 'C:/Users/JayHuang/Documents/GitHub/CSCI4830/Final_Project/Eye';
-    ChangeDirectory()
+    ChangeDirectory(1,i);
     imwrite(CropImageEye,filenameE);
+    cd ..
     cd ..
     
     filenameN = strcat('Nose',Index,'.jpg');
     CropImageNose = imcrop(input_img,[BBoxN(1) BBoxN(2) BBoxN(3) BBoxN(4)]);
-    cd Nose
+%     cd Nose
  %   cd 'C:/Users/JayHuang/Documents/GitHub/CSCI4830/Final_Project/Nose';
+    ChangeDirectory(2,i);
     imwrite(CropImageNose,filenameN);
+    cd ..
     cd ..
     
     filenameM = strcat('Mouth',Index,'.jpg');
     CropImageMouth = imcrop(input_img,[BBoxN(1) BBoxN(2) BBoxN(3) BBoxN(4)]);
-    cd Mouth
+%     cd Mouth
 %     cd 'C:/Users/JayHuang/Documents/GitHub/CSCI4830/Final_Project/Mouth';
+    ChangeDirectory(3,i);
     imwrite(CropImageMouth,filenameM);
+    cd ..
     cd ..
 end
 
