@@ -1,7 +1,7 @@
 %% Simple Face Recognition Example
 %  Copyright 2014-2015 The MathWorks, Inc.
 %% Load Image Information from ATT Face Database Directory
-faceDatabase = imageSet('FaceDatabaseATT','recursive');
+faceDatabase = imageSet('images','recursive');
 
 %% Display Montage of First Face
 figure;
