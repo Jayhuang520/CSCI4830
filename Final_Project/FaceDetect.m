@@ -1,16 +1,16 @@
 clc;clear all;close all;
 %basepath = 'C:/Users/JayHuang/Documents/GitHub/CSCI4830/Final_Project';
 %Read the image
-
+tic
 % -----------------Using a specific image-------------
-Jay = imread('IMG_0967.JPG');
-Jay = imresize(Jay,0.25);
-Jay = rot90(Jay,2);
+Jay = imread('Cassandra.JPG');
+% Jay = imresize(Jay,0.25);
+% Jay = rot90(Jay,2);
 % Cas = imread('Carssandra.jpg');
 %Get the FaceDetector Object
 
 FaceDetector = vision.CascadeObjectDetector();
-
+FaceDetector.MergeThreshold = 10;
 %--------------Set a threshold for the face
 % Use faceDector on us and get the faces
 BBox = step(FaceDetector,Jay);
@@ -26,19 +26,19 @@ imshow(B),title('Detected Face');
 %-------------using video frame----------------------
 % Create a cascade detector object.
 % faceDetector = vision.CascadeObjectDetector();
-% 
+%
 % % Read a video frame and run the detector.
 % videoFileReader = vision.VideoFileReader('visionface.avi');
 % videoFrame      = step(videoFileReader);
 % BBox            = step(faceDetector, videoFrame);
-% 
+%
 % % Draw the returned bounding box around the detected face.
 % videoOut = insertObjectAnnotation(videoFrame,'rectangle',BBox,'Face');
 % figure, imshow(videoOut), title('Detected face');
 %----------------using video frame------------------
-mkdir Eye
-mkdir Nose
-mkdir Mouth
+% mkdir Eye
+% mkdir Nose
+% mkdir Mouth
 for i = 1:size(BBox,1)
     w = int2str(i);
     filename = strcat('img',w,'.jpg');
@@ -58,5 +58,5 @@ end
 % nose = Nose(I);
 %-------Since we know that for a human being, mouth is always below the
 %eye,we can get the index from the eyes and search only below the eye.
-
+toc
 
